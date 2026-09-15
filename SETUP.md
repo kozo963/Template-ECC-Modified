@@ -5,19 +5,19 @@ machine setup, per-project setup, first run.
 
 ## 0. What you are installing (30 seconds)
 
-- **7 registered subagents** — real workers ZCode can spawn. They live in
+- **8 registered subagents** — real workers ZCode can spawn. They live in
   your HOME folder and work in every project. Each can have its own LLM.
-- **18 agent docs** (in `agents/` of every project) — job descriptions the
-  7 workers read and follow at the right moment. They are NEVER registered.
+- **19 agent docs** (in `agents/` of every project) — job descriptions the
+  8 workers read and follow at the right moment. They are NEVER registered.
 
 Rule: workers = global install once. docs = copied per project, never registered.
 
-## Part A — one-time: install the 7 subagents (global)
+## Part A — one-time: install the 8 subagents (global)
 
 Create these files in `C:\Users\<you>\.zcode\agents\` (macOS/Linux: `~/.zcode/agents/`).
 For most of them, copy the matching file from this template's `agents/` folder and
-ADD a frontmatter block on top (example below). Eren and Hange differ — see the
-notes under the table.
+ADD a frontmatter block on top (example below). Erwin, Eren and Hange differ — see
+the notes under the table.
 
 | Copy this template file | → save as | Name | Color | Role |
 |---|---|---|---|---|
@@ -28,6 +28,7 @@ notes under the table.
 | `agents/git-agent.md` | `killua.md` | Killua | blue | Git only: branches, commits, merges |
 | (content below) | `eren.md` | Eren | green | Codebase search only, read-only |
 | `agents/plan-keeper.md` | `hange.md` | Hange | pink | Plan/dataset files only — checkboxes, ROADMAP status, dataset lines |
+| `agents/visuals.md` | `hisoka.md` | Hisoka | purple | Blender/Unity/UI: builds and screenshot-verifies visuals |
 
 **Colors must be one of** `red, blue, green, yellow, purple, orange, pink, cyan`.
 Anything else is silently dropped, so the agent loses its colour chip.
@@ -82,13 +83,26 @@ tools: [Read, Glob, Grep, Edit, Write]
 
 then the body of `agents/plan-keeper.md`.
 
+`hisoka.md` — paste as-is:
+
+```markdown
+---
+name: "Hisoka"
+description: "Use PROACTIVELY for all visual work: Blender modeling/materials/lighting/scene/VFX, Unity scene and visual setup, and building or restyling web/app UI with screenshot verification. Always plans first in a markdown checklist. Not for gameplay, business logic, backend or data code — that is Levi."
+color: purple
+injectAgentsMd: true
+---
+```
+
+then the body of `agents/visuals.md`.
+
 Optional: pin a model per worker by adding `model: "<model-id>"` in the
 frontmatter (e.g. a cheap local model for Eren/Killua, a strong one for Erwin).
 No `model:` line = your default model. Avoid `model: "inherit"` on Erwin — it
 would run every orchestration turn at your main session's cost.
 
-Restart ZCode. Settings → Subagents must now show 7 agents. Do NOT register
-the other 18 files from `agents/` — the workers load them from disk on demand.
+Restart ZCode. Settings → Subagents must now show 8 agents. Do NOT register
+the other 19 files from `agents/` — the workers load them from disk on demand.
 
 ## Part B — per project: install the template
 
@@ -99,7 +113,7 @@ do not put it inside `.zcode/`):
 my-app/
 ├── AGENTS.md          ← the ONLY file ZCode auto-loads every session
 ├── SKILLS-INDEX.md
-├── agents/            ← 18 docs (already copied with the folder)
+├── agents/            ← 19 docs (already copied with the folder)
 ├── rules/             ← law: my-stack, git-strategy, plan-system, failure-policy
 ├── skills/            ← 11 docs, loaded on demand
 ├── datasets/          ← coder-failures.jsonl (fine-tuning harvest)
@@ -138,7 +152,7 @@ chains each milestone from the previous one. You merge milestone branches into
 
 ## Part E — first run
 
-1. Restart ZCode, confirm the 7 subagents exist.
+1. Restart ZCode, confirm the 8 subagents exist.
 2. Open the project, start goal mode with something like:
    `Work plan/01-M-LandingPage.md task T1 following AGENTS.md.`
    (or run `/delegate task T1 of plan/01-M-LandingPage.md`)
@@ -153,7 +167,7 @@ missing or wrong.
 
 ## Verification checklist
 
-- [ ] 7 agents visible in Settings → Subagents
+- [ ] 8 agents visible in Settings → Subagents
 - [ ] Erwin's frontmatter contains `tools: [Read, Glob, Agent, TodoWrite]`
 - [ ] `AGENTS.md` exists in the project root
 - [ ] `plan/ROADMAP.md` has at least one milestone with status TODO

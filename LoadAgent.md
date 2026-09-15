@@ -5,7 +5,7 @@
 
 | Full ECC | This Template |
 |---|---|
-| 68 agents | 17 agents (12 from ECC + 5 personas) |
+| 68 agents | 19 agent docs (12 from ECC + 7 personas) |
 | 286 skills | 11 skills |
 | All languages | Only React/TypeScript/Supabase stack |
 | Requires Claude Code | Works with zCode GOAL MODE |
@@ -46,7 +46,7 @@
 | `java-reviewer.md` | Not in current stack. Add later if needed. |
 | `csharp-reviewer.md` | Not in current stack. Add later if needed. |
 
-### Custom Personas (6 files)
+### Custom Personas (7 files)
 
 These are NEW agents we wrote. They do not exist in ECC.
 
@@ -58,6 +58,7 @@ These are NEW agents we wrote. They do not exist in ECC.
 | `git-agent.md` | Runs git commands only. No code changes. |
 | `explorer.md` | Searches internet for docs and error solutions. |
 | `plan-keeper.md` | Maintains `plan/` and `datasets/` only: checkboxes, ROADMAP status, dataset lines. |
+| `visuals.md` | Blender/Unity/UI builds, plan-first and screenshot-verified. |
 
 ### Skills from ECC (11 files)
 
