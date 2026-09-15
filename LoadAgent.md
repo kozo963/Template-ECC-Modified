@@ -46,7 +46,7 @@
 | `java-reviewer.md` | Not in current stack. Add later if needed. |
 | `csharp-reviewer.md` | Not in current stack. Add later if needed. |
 
-### Custom Personas (5 files)
+### Custom Personas (6 files)
 
 These are NEW agents we wrote. They do not exist in ECC.
 
@@ -57,6 +57,7 @@ These are NEW agents we wrote. They do not exist in ECC.
 | `reviewer.md` | Checks code against rules. Outputs PASS/FAIL. |
 | `git-agent.md` | Runs git commands only. No code changes. |
 | `explorer.md` | Searches internet for docs and error solutions. |
+| `plan-keeper.md` | Maintains `plan/` and `datasets/` only: checkboxes, ROADMAP status, dataset lines. |
 
 ### Skills from ECC (11 files)
 

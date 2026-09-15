@@ -5,45 +5,58 @@ machine setup, per-project setup, first run.
 
 ## 0. What you are installing (30 seconds)
 
-- **6 registered subagents** — real workers ZCode can spawn. They live in
+- **7 registered subagents** — real workers ZCode can spawn. They live in
   your HOME folder and work in every project. Each can have its own LLM.
-- **17 agent docs** (in `agents/` of every project) — job descriptions the
-  6 workers read and follow at the right moment. They are NEVER registered.
+- **18 agent docs** (in `agents/` of every project) — job descriptions the
+  7 workers read and follow at the right moment. They are NEVER registered.
 
 Rule: workers = global install once. docs = copied per project, never registered.
 
-## Part A — one-time: install the 6 subagents (global)
+## Part A — one-time: install the 7 subagents (global)
 
 Create these files in `C:\Users\<you>\.zcode\agents\` (macOS/Linux: `~/.zcode/agents/`).
-For 5 of them, copy the matching file from this template's `agents/` folder and
-ADD a frontmatter block on top (example below). The 6th (Eren) is given in full.
+For most of them, copy the matching file from this template's `agents/` folder and
+ADD a frontmatter block on top (example below). Eren and Hange differ — see the
+notes under the table.
 
 | Copy this template file | → save as | Name | Color | Role |
 |---|---|---|---|---|
-| `agents/brain.md` | `erwin.md` | Erwin | yellow | Brain: plans, delegates, updates plan, escalation fixes |
+| `agents/brain.md` | `erwin.md` | Erwin | yellow | Brain: plans, delegates, updates statuses. READ-ONLY (see table note) |
 | `agents/coder.md` | `levi.md` | Levi | red | Coder: writes code only |
 | `agents/reviewer.md` | `mikasa.md` | Mikasa | orange | Reviewer: read-only, PASS/FAIL |
 | `agents/explorer.md` | `armin.md` | Armin | cyan | Internet search (Lightpanda/WebSearch), read-only |
-| `agents/git-agent.md` | `killua.md` | Killua | gray | Git only: branches, commits, merges |
+| `agents/git-agent.md` | `killua.md` | Killua | blue | Git only: branches, commits, merges |
 | (content below) | `eren.md` | Eren | green | Codebase search only, read-only |
+| `agents/plan-keeper.md` | `hange.md` | Hange | pink | Plan/dataset files only — checkboxes, ROADMAP status, dataset lines |
 
-Frontmatter format (goes on line 1 of each file):
+**Colors must be one of** `red, blue, green, yellow, purple, orange, pink, cyan`.
+Anything else is silently dropped, so the agent loses its colour chip.
+
+Erwin is the one agent whose frontmatter is not optional boilerplate — the
+`tools:` line is what makes the whole system work:
 
 ```markdown
 ---
 name: "Erwin"
-description: "The main brain. Plans, branches, delegates, and merges."
+description: "The orchestrator. Use for planning, splitting tasks, delegating work, and driving a multi-step project to completion. Strictly read-only: it has no edit, write, or shell tools, so it CANNOT write code, run git, or touch files. It delegates every step — Levi (code), Killua (git), Mikasa (review), Eren (codebase search), Armin (internet), Hange (plan bookkeeping), Hisoka (visuals)."
 color: yellow
 injectAgentsMd: true
+tools: [Read, Glob, Agent, TodoWrite]
 ---
 ```
+
+`tools:` is an allowlist. Because it omits `Edit`, `Write` and `Bash`, Erwin
+physically cannot do the work itself — delegation stops being a hint and becomes
+the only path. The description is also load-bearing, not decoration: it is the
+only string ZCode shows the model when choosing an agent, so write every
+description as a firing rule ("Use PROACTIVELY when…"), never as a job title.
 
 `eren.md` — paste as-is:
 
 ```markdown
 ---
 name: "Eren"
-description: "Codebase search specialist. Read-only. Never writes code."
+description: "Use PROACTIVELY for any codebase search — locating files, symbols, definitions, call sites or usages, and answering 'where does X live / who calls X'. Returns file:line. Read-only. Not for internet lookups — that is Armin."
 color: green
 injectAgentsMd: true
 ---
@@ -55,12 +68,27 @@ You search the CODEBASE only. Never the internet (that is Armin's job).
 - Summarize findings in 3-5 bullets. No code changes. Read-only.
 ```
 
+`hange.md` — paste as-is:
+
+```markdown
+---
+name: "Hange"
+description: "Use whenever plan or dataset bookkeeping is required — ticking a task checkbox in a plan/ milestone file, updating plan/ROADMAP.md status, splitting an oversized task into subtasks, writing a `- [!]` BLOCKED marker, or appending a line to datasets/coder-failures.jsonl. Touches ONLY plan/ and datasets/. Never source code, never git, never builds."
+color: pink
+injectAgentsMd: true
+tools: [Read, Glob, Grep, Edit, Write]
+---
+```
+
+then the body of `agents/plan-keeper.md`.
+
 Optional: pin a model per worker by adding `model: "<model-id>"` in the
 frontmatter (e.g. a cheap local model for Eren/Killua, a strong one for Erwin).
-No `model:` line = your default model.
+No `model:` line = your default model. Avoid `model: "inherit"` on Erwin — it
+would run every orchestration turn at your main session's cost.
 
-Restart ZCode. Settings → Subagents must now show 6 agents. Do NOT register
-the other 17 files from `agents/` — the workers load them from disk on demand.
+Restart ZCode. Settings → Subagents must now show 7 agents. Do NOT register
+the other 18 files from `agents/` — the workers load them from disk on demand.
 
 ## Part B — per project: install the template
 
@@ -71,7 +99,7 @@ do not put it inside `.zcode/`):
 my-app/
 ├── AGENTS.md          ← the ONLY file ZCode auto-loads every session
 ├── SKILLS-INDEX.md
-├── agents/            ← 17 docs (already copied with the folder)
+├── agents/            ← 18 docs (already copied with the folder)
 ├── rules/             ← law: my-stack, git-strategy, plan-system, failure-policy
 ├── skills/            ← 11 docs, loaded on demand
 ├── datasets/          ← coder-failures.jsonl (fine-tuning harvest)
@@ -110,17 +138,23 @@ chains each milestone from the previous one. You merge milestone branches into
 
 ## Part E — first run
 
-1. Restart ZCode, confirm the 6 subagents exist.
+1. Restart ZCode, confirm the 7 subagents exist.
 2. Open the project, start goal mode with something like:
    `Work plan/01-M-LandingPage.md task T1 following AGENTS.md.`
+   (or run `/delegate task T1 of plan/01-M-LandingPage.md`)
 3. Expected loop: Erwin reads the plan → Killua creates the task branch →
    Levi builds (matching the mockup) → Mikasa reviews → FAIL: retry ladder
-   (2 own attempts → 2 with Armin on the internet → escalate to Erwin) →
-   PASS: Killua merges → Erwin ticks the checkbox in the plan file.
+   (2 own attempts → 2 with Armin on the internet → attempt 5 re-briefs Levi,
+   never Erwin) → PASS: Killua merges → Hange ticks the checkbox.
+
+The signature of a working install: **no file ever changes that wasn't changed
+by Levi, Killua or Hange.** If Erwin edits something, its `tools:` allowlist is
+missing or wrong.
 
 ## Verification checklist
 
-- [ ] 6 agents visible in Settings → Subagents
+- [ ] 7 agents visible in Settings → Subagents
+- [ ] Erwin's frontmatter contains `tools: [Read, Glob, Agent, TodoWrite]`
 - [ ] `AGENTS.md` exists in the project root
 - [ ] `plan/ROADMAP.md` has at least one milestone with status TODO
 - [ ] Every task line points to an existing Mockup path (or says "no mockup")

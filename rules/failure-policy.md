@@ -7,10 +7,13 @@ Applies to every task in the coder → reviewer loop.
 | Attempt | Mode |
 |---|---|
 | 1–2 | Coder's own knowledge. NO internet. |
-| 3–4 | Internet rescue: coder hands off to `explorer` with the EXACT error text, stack trace, and files involved. Coder reads findings and retries. |
-| 5 | `ESCALATE: brain`. Coder stops and writes a FAIL report. |
+| 3–4 | Internet rescue: coder hands off to **Armin** with the EXACT error text, stack trace, and files involved. Coder reads findings and retries. |
+| 5 | `ESCALATE: fresh-approach`. Coder stops and writes a FAIL report. |
 
 Max 5 attempts per task. The counter resets only when the reviewer reports a DIFFERENT class of failure than the previous round.
+
+**The brain never writes code.** Attempt 5 is a coder attempt, not a brain
+attempt — the brain's job is to re-brief the coder with everything learned.
 
 ## Explorer (internet rescue)
 
@@ -23,19 +26,34 @@ Max 5 attempts per task. The counter resets only when the reviewer reports a DIF
 ## Coder FAIL report (required at attempt 5)
 
 ```
-ESCALATE: brain
+ESCALATE: fresh-approach
 TASK: <milestone/task id>
 ERROR: <exact message>
 TRIED: 1) ... 2) ... 3) ...
 FILES: <paths involved>
 ```
 
-## Brain escalation
+## Brain escalation (attempt 5)
 
-1. Read the FAIL report + reviewer feedback + explorer findings.
-2. Implement the fix YOURSELF — the only case where the brain writes code.
-3. If it passes review → append ONE line to `datasets/coder-failures.jsonl` (format in `datasets/README.md`). This is the fine-tuning set: what the coder didn't know.
-4. If the brain also fails → mark the task `- [!]` BLOCKED in the milestone file with a one-line reason and surface it to the user.
+The brain is read-only. It has no edit or write tools, so fixing the code itself
+is not an option it has — and not an option it should want. Instead:
+
+1. Assemble the full brief: the FAIL report, every reviewer FAIL list, every
+   attempt and its exact error, and Armin's findings.
+2. Re-invoke **Levi** in a fresh call with that brief, requiring:
+   - a stated root cause and a named different approach BEFORE any code;
+   - no repetition of any approach listed as already tried;
+   - a FAIL report immediately, with no guessing, if it cannot name a different
+     hypothesis.
+3. Does it pass Mikasa?
+   - **Yes** → tell **Hange** to append ONE line to `datasets/coder-failures.jsonl`
+     (format in `datasets/README.md`). This is the fine-tuning set: what the coder
+     didn't know.
+   - **No** → tell **Hange** to mark the task `- [!]` BLOCKED in the milestone
+     file with a one-line concrete reason, then surface it to the user and stop.
+
+Bookkeeping — the checkbox, the BLOCKED marker, the ROADMAP status, the dataset
+line — belongs to **Hange**. The brain reads and decides; it never writes files.
 
 ## Dataset line (JSONL, one object per line)
 
